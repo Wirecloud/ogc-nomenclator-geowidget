@@ -1,0 +1,118 @@
+body{
+  background:#E4F9CC none repeat scroll 0 0;
+
+}
+	#header, #container{
+		background:white url(http://ezweb.tid.es/repository/ezweb-gadgets/feedReader/feedReader_3.33/css/images/fieldsetgreen.png) repeat-x scroll left bottom;
+		border-color:#629B1E;
+	}
+
+	label{
+		color:#282828;	
+	}
+	
+	#search{
+		border-color:#629B1E;
+	}
+
+	#header_top{
+	  border-color:#629B1E;
+	}
+	
+	#selected_categories li{
+		background: #E0E0E0;
+		border-color: #999999;
+		color: #666666;
+	}
+
+
+	#selected_categories li.operator{
+		background-color:#E9E9E9;
+		color: #629B1E;
+	}
+	
+	#header_bottom{
+	  border-color:#629B1E;
+	}
+	
+
+	#options div{
+		color:#629B1E;
+	}
+	
+	#imp_exp div{
+		color:#629B1E;
+	}
+	
+	#imp_exp{
+		border-color:#629B1E;
+	}
+	
+	#list{
+	  border-color:#629B1E;
+		background:white  url(http://ezweb.tid.es/repository/ezweb-gadgets/feedReader/feedReader_3.33/css/images/fieldsetgreen.png) repeat-x scroll bottom left;
+	}
+
+	#list .feed{
+		border-color:#629B1E;
+	}
+	.feed_title a{
+		color:#629B1E;
+	}
+	
+	.feed_tags a{
+		color:#6c6c6c;
+		background-color:#FBF5EF;
+	}
+	
+	.feed_tags a:hover{
+		color:#6C6C6C;
+		background-color:#E9E9E9;
+	}
+
+	.feed_edition{
+		border-color:#d5d5d5;
+		background-color: #F5F5F5;
+	}
+
+	
+#addFeed li{
+	  border-color:#629B1E;
+	  
+}
+
+#addFeed label{
+		color:#282828;
+	}
+	
+#addFeed fieldset{
+	background:white  url(http://ezweb.tid.es/repository/ezweb-gadgets/feedReader/feedReader_3.33/css/images/fieldsetgreen2.png) repeat-x scroll bottom left;
+	border-color:#629B1E;
+}
+
+#addFeed legend{
+	background:white none repeat scroll 0 0;
+	border-color:#629B1E;
+	color:#629B1E;
+}
+
+.tag_label{
+	color:#629B1E;
+}
+
+button{
+	background-color:#ECECF0;
+	border-color:#629B1E;
+}
+
+#search_l{
+	color:#629B1E;
+}
+
+select{
+	border-color:#629B1E;
+}
+
+input[type=text],textarea{
+	border-color:#629B1E;
+}

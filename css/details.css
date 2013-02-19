@@ -1,0 +1,303 @@
+/***************************************************************************
+* Copyright 2010 (C)
+Grupo de Sistemas de Información Avanzados IAAA Universidad de Zaragoza <http://iaaa.cps.unizar.es/>
+
+This file is part of the generic nomenclator Gadget for the EzWeb Platform
+
+nomenclator Gadget is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+nomenclator Gadget is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with nomenclator Gadget. If not, see <http://www.gnu.org/licenses/>
+* ****************************************************************************/
+
+/* The Original Code is HTML_IGN_style.css
+ * The Initial Developer of the Original Code is IAAA.
+ *
+ * Created on Tue May 04 10:15:51 CEST 2010 
+ */
+#info a.index {
+	color: blue;
+	font-size: 8px;
+	font-family: Verdana, Arial, Tahoma;
+	font-weight: normal;
+	padding: 3px;
+	text-decoration: underline;
+}
+#info div {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	color: #000033;
+	padding:1px;
+}
+#info li {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:11px;
+	color: #000033;
+  	list-style-type: none;
+  	list-style-position: outside; 
+}
+#info p {
+	color: #003399;
+	text-decoration: none;
+	font-family: Verdana, Arial, Tahoma;
+	font-size: 11px;
+	font-weight:normal;
+	font-style:normal;
+	margin-left:2px;
+	padding:1px;
+	display:inline; 
+}
+
+br {
+    background: red;
+}
+.iaaa-Gazetteer-Black .iaaa-ResultsView #info p {
+	color: black;
+	text-decoration: none;
+	font-family: Verdana, Arial, Tahoma;
+	font-size: 11px;
+	font-weight:normal;
+	font-style:normal;
+	margin-left:2px;
+	padding:1px;
+	display:inline; 
+}
+#info hr {
+  color:#003399;
+}
+.iaaa-Gazetteer-Black .iaaa-ResultsView #info hr {
+  color:black;
+}
+#info li.index {
+  	list-style-type: disc;
+  	display: none;
+}
+ul{
+    margin: 0;
+}
+#info div.sectionIndex {
+	font-size:13px;
+	font-weight:bold;
+	color:white;
+	margin-left:0px;
+	background-color:#336EA0;
+}
+
+.iaaa-Gazetteer-Black .iaaa-ResultsView #info div.sectionIndex {
+	font-size:13px;
+	font-weight:bold;
+	color:white;
+	margin-left:0px;
+	background-color:black;
+}
+
+/* Estilo del titulo de la pagina */ 
+#info div.pageTitle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size:20px;
+	font-weight:bold; 
+	border-style:double;
+	padding:5px;
+	color:white;
+	background-color:#336EA0;
+	text-align: center;
+}
+.iaaa-Gazetteer-Black .iaaa-ResultsView #info div.pageTitle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size:16px;
+	font-weight:bold; 
+	border-style:double;
+	padding:5px;
+	color:white;
+	background-color:black;
+	text-align: center;
+}
+/* Estilo del titulo del índice */ 
+#info div.indexTitle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size:13px;
+	font-weight:bold; 
+	padding:5px;
+	color: #000033;
+}
+/* Estilos de las diferentes secciones */ 
+/* La seccion0 no se mostrara */
+#info div.section0 {
+	margin-left:0px;
+	padding:1px;
+}
+#info div.section1 {
+	margin-left:5px;
+}
+#info li.section1l {
+	margin-left:5px;
+}
+#info p.section1v {
+}
+#info div.section2 {
+	margin-left:10px;
+}
+#info li.section2l {
+	margin-left:10px;
+}
+#info p.section2v {
+}
+#info div.section3 {
+	font-weight:bold;
+	margin-left:20px;
+}
+#info li.section3l {
+	font-weight:bold;
+	margin-left:20px;
+}
+#info p.section3v {
+	font-weight:normal;
+}
+#info div.section4 {
+	margin-left:30px;
+}
+#info li.section4l {
+	margin-left:30px;
+}
+#info p.section4v {
+}
+#info div.section5 {
+	margin-left:40px;
+}
+#info li.section5l {
+	margin-left:40px;
+}
+#info p.section5v {
+}
+#info div.section6 {
+	margin-left:50px;
+}
+#info li.section6l {
+	margin-left:50px;
+}
+#info p.section6v {
+}
+#info div.section7 {
+	margin-left:50px;
+}
+#info li.section7l {
+	margin-left:50px;
+}
+#info p.section7v {
+}
+#info div.section8 {
+	margin-left:60px;
+}
+#info li.section8l {
+	margin-left:60px;
+}
+#info p.section8v {
+}
+#info div.section9 {
+	margin-left:80px;
+}
+#info li.section9l {
+	margin-left:80px;
+}
+#info p.section9v {
+}
+#info div.section10 {
+	margin-left:100px;
+}
+#info li.section10l {
+	margin-left:100px;
+}
+#info p.section10v {
+}
+#info div.section11 {
+	margin-left:120px;
+}
+#info li.section11l {
+	margin-left:120px;
+}
+#info p.section11v {
+}
+#info div.section12 {
+	margin-left:140px;
+}
+#info li.section12l {
+	margin-left:140px;
+}
+#info p.section12v {
+}
+#info div.section13 {
+	margin-left:160px;
+}
+#info li.section13l {
+	margin-left:160px;
+}
+#info p.section13v {
+}
+#info div.section14 {
+	margin-left:180px;
+}
+#info li.section14l {
+	margin-left:180px;
+}
+#info p.section14v {
+}
+#info div.section15 {
+	margin-left:200px;
+}
+#info li.section15l {
+	margin-left:200px;
+}
+#info p.section15v {
+}
+#info div.section16 {
+	margin-left:200px;
+}
+#info li.section16l {
+	margin-left:200px;
+}
+#info p.section16v {
+}
+#info div.section17 {
+	margin-left:200px;
+}
+#info li.section17l {
+	margin-left:200px;
+}
+#info p.section17v {
+}
+#info div.section18 {
+	margin-left:200px;
+}
+#info li.section18l {
+	margin-left:200px;
+}
+#info p.section18v {
+}
+#info div.section19 {
+	margin-left:200px;
+}
+#info li.section19l {
+	margin-left:200px;
+}
+#info p.section19v {
+}
+#info div.section20 {
+	margin-left:200px;
+}
+#info li.section20l {
+	margin-left:200px;
+}
+#info p.section20v {
+}
+
+.section3v, .section5v {
+    cursor: pointer !important;
+}
