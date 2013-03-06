@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Template xmlns="http://morfeo-project.org/2007/Template">
-    <!-- Gadget Meta-Info -->
     <Catalog.ResourceDescription>
         <Vendor>CoNWeT</Vendor>
-        <Name>Nomenclator</Name>
+        <Name>ogc-nomenclator-geowidget</Name>
+        <DisplayName>Nomenclator</DisplayName>
         <Version>0.1</Version>
         <Author>jmostazo</Author>
         <Mail>jmostazo@fi.upm.es</Mail>
@@ -13,11 +13,6 @@
         <WikiURI>http://hercules.ls.fi.upm.es/public/conwet/ogf.html#getfeature-widget</WikiURI>
     </Catalog.ResourceDescription>
 
-    <!-- EzWeb Gadgets Preferences -->
-    <Platform.Preferences>
-    </Platform.Preferences>
-
-    <!-- EzWeb Gadget Persistent State -->
     <Platform.StateProperties>
         <Property name="services" type="text" label="Services"/>
     </Platform.StateProperties>
@@ -37,6 +32,4 @@
 
     <Platform.Rendering width="6" height="28"/>
 
-    <Platform.Context>
-    </Platform.Context> 
 </Template>
