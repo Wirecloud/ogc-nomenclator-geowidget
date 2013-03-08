@@ -27,8 +27,9 @@ body {
 }
 
 #header .label {
-    color: #809DCD;
-    font-size: 11px;
+    color: #444444;
+    font-size: 13px;
+    background-color: #D1E0F7;
     font-weight: bold;
 }
 
