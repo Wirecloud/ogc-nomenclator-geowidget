@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<serviceConfig
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='./js/conwet/service-config/service_config.xsd'>
+    <request>
+        <url>http://www.idee.es/IDEE-WFS-Nomenclator-NGC/services</url>
+        <namespace>xmlns(mne=http://www.idee.es/mne)</namespace>
+        <version>1.1.0</version>
+        <typename>mne:Entidad</typename>
+        <filter><![CDATA[<Filter xmlns:mne="http://www.idee.es/mne"><PropertyIsLike matchCase="false" wildCard="*" singleChar="?" escapeChar="!"><PropertyName>{{prop_name}}</PropertyName><Literal>*{{name}}*</Literal></PropertyIsLike></Filter>]]></filter>
+        <search>
+            <option id="name" label="Nombre">mne:nombreEntidad/mne:NombreEntidad/mne:nombre</option>
+        </search>
+    </request>
+    <results>
+        <locationInfo>nombreEntidad/NombreEntidad/nombre</locationInfo>
+        <location>posicionEspacial/PosicionEspacial/geometria/Point/pos</location>
+        <srs attribute="srsName">posicionEspacial/PosicionEspacial/geometria/Point</srs>
+        <outputText>nombreEntidad/NombreEntidad/nombre</outputText>
+        <displayInfo>nombreEntidad/NombreEntidad/nombre</displayInfo>
+        <displayInfo headChar="(" trailChar=")">tipoEntidad/TipoEntidad/tipo</displayInfo>
+    </results>
+    <details>
+        <detailslevel>
+            <label>NombreEntidad</label>
+            <detailslevel>
+                <label>Nombre</label>
+                <path>nombreEntidad/NombreEntidad/nombre</path>
+            </detailslevel>
+            <detailslevel>
+                <label>Idioma</label>
+                <path>nombreEntidad/NombreEntidad/idioma</path>
+            </detailslevel>
+            <detailslevel>
+                <label>ClaseNombre</label>
+                <path>nombreEntidad/NombreEntidad/claseNombre</path>
+            </detailslevel>
+            <detailslevel>
+                <label>Estatus</label>
+                <path>nombreEntidad/NombreEntidad/estatus</path>
+            </detailslevel>
+            <detailslevel>
+                <label>Fuente</label>
+                <path>nombreEntidad/NombreEntidad/fuente</path>
+            </detailslevel>
+        </detailslevel>
+        <detailslevel>
+            <label>TipoEntidad</label>
+            <detailslevel>
+                <label>Tipo</label>
+                <path>tipoEntidad/TipoEntidad/tipo</path>
+            </detailslevel>
+            <detailslevel>
+                <label>CatalogoEntidades</label>
+                <path>tipoEntidad/TipoEntidad/catalogoEntidades</path>
+            </detailslevel>
+        </detailslevel>
+        <detailslevel>
+            <label>PosicionEspacial</label>
+            <detailslevel>
+                <label>Posicion</label>
+                <path>posicionEspacial/PosicionEspacial/geometria/Point/pos</path>
+            </detailslevel>
+            <detailslevel>
+                <label>SRS</label>
+                <path attribute="srsName">posicionEspacial/PosicionEspacial/geometria/Point</path>
+            </detailslevel>
+        </detailslevel>
+        <detailslevel>
+            <label>EntidadLocal</label>
+            <detailslevel>
+                <label>ComunidadAutonoma</label>
+                <path>entidadLocal/EntidadLocal/comunidadAutonoma</path>
+            </detailslevel>
+            <detailslevel>
+                <label>Provincia</label>
+                <path>entidadLocal/EntidadLocal/provincia</path>
+            </detailslevel>
+        </detailslevel>
+        <detailslevel>
+            <label>Codificacion</label>
+            <detailslevel>
+                <label>Codigo</label>
+                <path>codificacion/Codificacion/codigo</path>
+            </detailslevel>
+            <detailslevel>
+                <label>SistemaCodificacion</label>
+                <path>codificacion/Codificacion/sistemaCodificacion</path>
+            </detailslevel>
+        </detailslevel>
+        <detailslevel>
+            <label>Mapa</label>
+            <detailslevel>
+                <label>Serie</label>
+                <path>mapa/Mapa/serie</path>
+            </detailslevel>
+            <detailslevel>
+                <label>Hoja</label>
+                <path>mapa/Mapa/hoja</path>
+            </detailslevel>
+        </detailslevel>
+    </details>
+</serviceConfig>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<serviceConfig
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='./js/conwet/service-config/service_config.xsd'>
+    <request>
+        <url>http://www.cartociudad.es/wfs-portal/services</url>
+        <namespace>xmlns(app=http://www.deegree.org/app)</namespace>
+        <version>1.1.0</version>
+        <typename>app:Entidad</typename>
+        <filter><![CDATA[<Filter xmlns:app="http://www.deegree.org/app"><PropertyIsLike matchCase="false" wildCard="*" singleChar="?" escapeChar="!"><PropertyName>{{prop_name}}</PropertyName><Literal>*{{name}}*</Literal></PropertyIsLike></Filter>]]></filter>
+        <search>
+            <option id="name" label="Nombre">nombreEntidad/nombre</option>
+        </search>
+    </request>
+    <results>
+        <locationInfo>nombreEntidad/nombre</locationInfo>
+        <location>posicionEspacial/Point/pos</location>
+        <srs attribute="srsName">posicionEspacial/boundedBy/Envelope</srs>
+        <outputText>nombreEntidad/nombre</outputText>
+        <displayInfo>nombreEntidad/nombre</displayInfo>
+        <displayInfo headChar="(" trailChar=")">tipoEntidad/tipo</displayInfo>
+    </results>
+    <details>
+        <detailslevel>
+            <label>Nombre de entidad</label>
+            <detailslevel>
+                <label>Nombre</label>
+                <path>nombreEntidad/nombre</path>
+            </detailslevel>
+            <detailslevel>
+                <label>Idioma</label>
+                <path>nombreEntidad/idioma</path>
+            </detailslevel>
+            <detailslevel>
+                <label>Clase</label>
+                <path>nombreEntidad/claseNombre</path>
+            </detailslevel>
+            <detailslevel>
+                <label>Estatus</label>
+                <path>nombreEntidad/estatus</path>
+            </detailslevel>
+            <detailslevel>
+                <label>Fuente</label>
+                <path>nombreEntidad/fuente</path>
+            </detailslevel>
+        </detailslevel>
+        <detailslevel>
+            <label>Tipo de entidad</label>
+            <detailslevel>
+                <label>Tipo</label>
+                <path>tipoEntidad/tipo</path>
+            </detailslevel>
+            <detailslevel>
+                <label>CatalogoEntidades</label>
+                <path>tipoEntidad/catalogoEntidades</path>
+            </detailslevel>
+        </detailslevel>
+        <detailslevel>
+            <label>Posicion Espacial</label>
+            <detailslevel>
+                <label>Posicion</label>
+                <path>posicionEspacial/boudedBy/Envelope/pos</path>
+            </detailslevel>
+            <detailslevel>
+                <label>SRS</label>
+                <path attribute="srsName">posicionEspacial/Point</path>
+            </detailslevel>
+        </detailslevel>
+        <detailslevel>
+            <label>Entidad relacionada</label>
+            <detailslevel>
+                <label>Id entidad</label>
+                <path>entidadRelacionada/idEntidad</path>
+            </detailslevel>
+            <detailslevel>
+                <label>Descripción de relación</label>
+                <path>entidadRelacionada/descripcionRelacion</path>
+            </detailslevel>
+            <detailslevel>
+                <label>Tipo de relación</label>
+                <path>entidadRelacionada/tipoRelacion</path>
+            </detailslevel>
+        </detailslevel>
+        <detailslevel>
+            <label>Entidad local</label>
+            <detailslevel>
+                <label>Provincia</label>
+                <path>entidadLocal/provincia</path>
+            </detailslevel>
+            <detailslevel>
+                <label>Municipio</label>
+                <path>entidadLocal/municipio</path>
+            </detailslevel>
+        </detailslevel>
+    </details>
+</serviceConfig>

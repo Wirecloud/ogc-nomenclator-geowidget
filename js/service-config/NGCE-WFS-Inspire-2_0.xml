@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<serviceConfig
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='./js/conwet/service-config/service_config.xsd'>
+    <request>
+        <url>http://www.ign.es/wfs-inspire/ngce</url>
+        <namespace>xmlns(gn=urn:x-inspire:specification:gmlas:GeographicalNames:3.0)</namespace>
+        <version>2.0.0</version>
+        <typename>gn:NamedPlace</typename>
+        <filter><![CDATA[<fes:Filter xmlns:gn="urn:x-inspire:specification:gmlas:GeographicalNames:3.0"><fes:PropertyIsLike matchCase="false" wildCard="*" singleChar="?" escapeChar="!"><fes:ValueReference>{{prop_name}}</fes:ValueReference><fes:Literal>*{{name}}*</fes:Literal></fes:PropertyIsLike></fes:Filter>]]></filter>
+        <search>
+            <option id="name" label="Nombre">/gn:NamedPlace/gn:name/gn:GeographicalName/gn:spelling/gn:SpellingOfName/gn:text</option>
+        </search>
+    </request>
+    <results>
+        <locationInfo>name/GeographicalName/spelling/SpellingOfName/text</locationInfo>
+        <location>geometry/Point/pos</location>
+        <srs attribute="srsName">geometry/Point</srs>
+        <outputText>name/GeographicalName/spelling/SpellingOfName/text</outputText>
+        <displayInfo>name/GeographicalName/spelling/SpellingOfName/text</displayInfo>
+        <displayInfo headChar="(" trailChar=")">localType/LocalisedCharacterString</displayInfo>
+    </results>
+    <details>
+        <detailslevel>
+            <label>Local Type</label>
+            <path>localType/LocalisedCharacterString</path>
+        </detailslevel>
+        <detailslevel>
+            <label>Nombre</label>
+            <detailslevel>
+                <label>Idioma</label>
+                <path>name/GeographicalName/language</path>
+            </detailslevel>
+            <detailslevel>
+                <label>Source Of Name</label>
+                <path>name/GeographicalName/sourceOfName</path>
+            </detailslevel>
+            <detailslevel>
+                <label>Spelling of name</label>
+                <path>name/GeographicalName/spelling/SpellingOfName/text</path>
+            </detailslevel>
+        </detailslevel>
+    </details>
+</serviceConfig>

@@ -27,35 +27,65 @@ use("conwet");
 conwet.Gadget = Class.create({
 
     initialize: function() {
-        // EzWeb variables
+        
         this.locationInfoEvent = new conwet.events.Event('location_info_event');
-        this.locationEvent     = new conwet.events.Event('location_event');
         this.outputTextEvent   = new conwet.events.Event('output_text_event');
         this.searchTextEvent   = new conwet.events.Event('search_text_event');
-
-        this.searchTextSlot    = new conwet.events.Slot('search_text_slot', function(text) {
-            this.searchInput.value = text;
-            this._sendSearchRequest(this.serviceSelect.getSelectedValue(), this.searchInput.value);
-        }.bind(this));
-
-        this.wfsServiceSlot   = new conwet.events.Slot('wfs_service_slot', function(service) {
-            service = service.evalJSON();
-            if (typeof service == 'object') {
-                if (('type' in service) && ('url' in service) && ('service_type' in service) && ('name' in service) && (service.type == "WFS") && (service.url != "")) {
-                    this.addWfsService(service, true);
-                    this.showMessage(_("Se ha recibido un nuevo servidor."));
-                    this.save();
-                }
-            }
-        }.bind(this));
-
-        this.servicesPreference = EzWebAPI.createRWGadgetVariable('services');
+        
+        this.controller = null;
 
         // Attributes
         this.messageManager = new conwet.ui.MessageManager(3000);
         this.transformer    = new conwet.map.ProjectionTransformer();
-
+        
+        this.parseUtils = new conwet.parser.ParseUtils();
+        
+        this.serviceConfiguration = null; //Contains the configuration of the service in use
+        this.serviceConfigurationList = []; //Contains the configuration of all the services
+        
+        //Drwa the widget
+        this.servicesPreference = MashupPlatform.widget.getVariable("services");
         this.draw();
+        
+        //Now, start listening for events in the slots
+        this.searchTextSlot    = new conwet.events.Slot('search_text_slot', function(text) {
+            var data;
+            try{
+                data = JSON.parse(text);
+            }catch(e){
+                data = text;
+            }
+            var inputs = $$("input.search");
+            
+            if(inputs.length > 0){
+                if(typeof data == "string"){
+                    inputs[0].setValue(data);
+                }else if(data != null && data.length > 0){
+                    for(var x = 0; x < inputs.length && x < data.length; x++)
+                        inputs[x].setValue(data[x]);
+                }
+                this.launchSearch();
+            }
+        }.bind(this));
+        
+        this.wfsServiceSlot   = new conwet.events.Slot('wfs_service_slot', function(service) {
+            service = JSON.parse(service);
+
+            if ((typeof service == 'object') && ('type' in service) && ('url' in service) && ('service_type' in service) && ('name' in service) && (service.type == "WFS") && (service.url != "")) {
+                this.loadNewService(service, true);
+            }
+        }.bind(this));
+        
+        this.configSlot   = new conwet.events.Slot('config_slot', function(service) {
+            service = JSON.parse(service);
+            if ((typeof service == 'object') && ('type' in service) && ('url' in service) && ('service_type' in service) && ('name' in service) && (service.type == "WFS") && (service.url != "")) {
+                this.loadNewService(service, true);
+            }
+        }.bind(this));
+
+        
+
+        
     },
 
     draw: function() {
@@ -67,75 +97,222 @@ conwet.Gadget = Class.create({
         serviceLabel.appendChild(document.createTextNode(_("Servicio WFS:")));
         header.appendChild(serviceLabel);
 
-        this.serviceSelect = new conwet.ui.StyledSelect({"onChange": function(){}});
+        //Service selector
+        this.serviceSelect = new StyledElements.StyledSelect();
+        this.serviceSelect.addEventListener("change", function(){
+            if(this.serviceSelect.getValue() != "")
+                this.setWfsService(JSON.parse(this.serviceSelect.getValue()));
+        }.bind(this));
         this.serviceSelect.addClassName("service");
+        this.serviceSelect.textDiv.hide();
         this.serviceSelect.insertInto(header);
+        
+        //Draw all the search options
+        var searchOptionsContainer = document.createElement("div");
+        $(searchOptionsContainer).addClassName("searchOptions");
+        header.appendChild(searchOptionsContainer);
+        this.drawSearchOptions();
 
-        this.serviceSelect.addOption(_('Select a server'), '', {"selected": true, "onRemove": this.save.bind(this)});
+        this.serviceSelect.addEntries([{label: _('Select a server'), value: ''}]);
 
         if (this.servicesPreference.get() != "") {
-            var services = this.servicesPreference.get().evalJSON();
+            var services = JSON.parse(this.servicesPreference.get());
 
             for (var i=0; i<services.length; i++) {
-                this.addWfsService(services[i], i==0);
+                this.loadNewService(services[i], i==0);
             }
         }
+       
+    },
+    
+    drawSearchOptions: function(){
 
-        var searchLabel = document.createElement("div");
-        $(searchLabel).addClassName("label");
-        searchLabel.appendChild(document.createTextNode(_("Topónimo:")));
-        header.appendChild(searchLabel);
+        var content = $$(".searchOptions")[0].childElements();
+        if(content != null){
+            content.each(function(element){
+                element.remove();
+            });
+        }
+        
+        if(this.serviceConfiguration != null){
+            var searchOptions = this.serviceConfiguration.request[0].search[0].option;
+            for(var x = 0; x < searchOptions.length; x++){
 
-        var searchDiv = document.createElement("div");
-        $(searchDiv).addClassName("search");
-        header.appendChild(searchDiv);
+                var searchOption = searchOptions[x];
 
-        this.searchInput = document.createElement("input");
-        this.searchInput.type = "text";
-        $(this.searchInput).addClassName("search");
-        searchDiv.appendChild(this.searchInput);
+                var searchLabel = document.createElement("div");
+                $(searchLabel).addClassName("label");
+                searchLabel.appendChild(document.createTextNode(_(searchOption.label)));
+                $$(".searchOptions")[0].appendChild(searchLabel);
 
-        var searchButton = conwet.ui.UIUtils.createButton({
-            "classNames": ["search_button"],
-            "title"     : _("Buscar topónimo"),
-            "value"     : _("Buscar"),
-            "onClick"   : function(e) {
-                this.sendSearch(this.searchInput.value);
-                this._sendSearchRequest(this.serviceSelect.getSelectedValue(), this.searchInput.value);
-            }.bind(this)
-        });
-        header.appendChild(searchButton);
+                /* Por ahora no permito que haya búsquedas con parámetros opcionales
+                //Select with the properties that can be used to search in this service
+                this.propertySelect = new StyledElements.StyledSelect({"onChange": function(){}});
+                this.propertySelect.textDiv.hide();
+                //this.propertySelect.addClassName("search"); TEMPORAL!!
+                this.propertySelect.addClassName("hidden"); //TEMPORAL!!
+                this.propertySelect.addEntries([{label: _('Search by'), value: ''}]);
+                this.propertySelect.insertInto($$(".searchOptions")[0]);
 
+                */
+
+                //$(this.propertySelect).hide(); //Temporal
+
+                var searchDiv = document.createElement("div");
+                $(searchDiv).addClassName("search");
+                $$(".searchOptions")[0].appendChild(searchDiv);
+
+                //Text input containing the text to be searched
+                var searchInput = document.createElement("input");
+                searchInput.type = "text";
+                searchInput.id = searchOption.id;
+                searchInput.onkeydown = function(k){
+                    if(k.keyCode == 13)
+                        this.launchSearch();
+                }.bind(this);
+                $(searchInput).addClassName("search");
+                $(searchInput).setAttribute("data-property", searchOption.Text);
+                searchDiv.appendChild(searchInput);
+                
+            }
+            
+            var searchButton = conwet.ui.UIUtils.createButton({
+                "classNames": ["search_button"],
+                "title"     : _("Buscar topónimo"),
+                "value"     : _("Buscar"),
+                "onClick"   : this.launchSearch.bind(this)
+            });
+            $$(".searchOptions")[0].appendChild(searchButton);
+        }
+    },
+    
+    /**
+     * This function starts a new search
+     */
+    launchSearch: function(){
+        var inputs = $$("input.search");
+        var sendValues = [];
+        for(var x = 0; x < inputs.length; x++){
+            sendValues.push(inputs[x].getValue());
+        }
+        this.sendSearch(JSON.stringify(sendValues));
+        this.controller._sendSearchRequest(JSON.parse(this.serviceSelect.getValue()));
     },
 
-    addWfsService: function(service, selected) {
-        this.serviceSelect.addOption(service.name, service, {"removable": true, "selected": selected});
+    /*
+     * This functions adds a WFS service to the select. If added, returns true, othrewise returns false.
+     */
+    loadNewService: function(service, selected) {
+        var serviceJson = JSON.stringify(service);
+        
+        //Add it if it already isn't in the select
+        if(!(serviceJson in this.serviceSelect.optionValues)){
+            
+            if(service.xmlText != null){
+                var configuration = XMLObjectifier.xmlToJSON(XMLObjectifier.textToXML(service.xmlText));
+                this.addNewService(service, configuration, selected);
+            }else{
+                //Load the configuration of the service
+                new Ajax.Request(servicesAssociations[service.url], {
+                    method: 'GET',
+                    onSuccess: function(transport) {
+
+                        var configuration = XMLObjectifier.xmlToJSON(transport.responseXML);
+
+                        this.addNewService(service, configuration, selected);
+
+                    }.bind(this),
+                    onFailure: function(transport) {
+                        this.showMessage(_("Error al cargar la configuración del servicio"));
+                    }.bind(this)
+                });
+            }
+        }
+        
+    },
+    
+    addNewService: function(service, configuration, selected){
+        var serviceJson = JSON.stringify(service);
+        
+        this.serviceSelect.addEntries([{label: service.name, value: serviceJson}]);
+                    
+        //Add the configuration to the list of configurations
+        this.serviceConfigurationList[service.name] = configuration;
+
+        //Set this as the current service
+        if(selected)
+            this.setWfsService(service);
+
+        //Tell everything is ok and save the services list (persistent list)
+        this.showMessage(_("Se ha recibido un nuevo servidor."));
+        this.save(service);  
+    },
+    
+    /*
+     * This function changes the current service to the given service
+     */
+    setWfsService: function(service){
+        this.serviceSelect.setValue(JSON.stringify(service));
+        
+        //Parse the XML configuration to an object
+        this.serviceConfiguration = this.serviceConfigurationList[service.name];
+        
+        /* Por ahora no permito busquedas opcionales
+        //Set the search options list
+        this.propertySelect.clear();
+        try{
+            var searchOptions = this.serviceConfiguration.request[0].search[0].option;
+            for(var x = 0; x < searchOptions.length; x++){
+                var propertyName = searchOptions[x].Text;
+                var label = searchOptions[x].label;
+                this.propertySelect.addEntries([{label: _(label), value: propertyName}]);
+            }
+        }catch(e){};
+        */
+        
+        //Create the controller
+        if(service.service_type == 'MNE' || service.service_type == 'EGN' || service.service_type == 'INSPIRE')
+            this.controller = new conwet.WFSController(this);
+        else
+            this.showMessage(_("Tipo de servicio desconocido"));
+        
+        //Redraw the search options available for this service
+        this.drawSearchOptions();
+        
+        //Clean the list of results
+        this.clearUI();
     },
 
-    save: function() {
-        var options = this.serviceSelect.options;
+    /*
+     * This function saves the service in a persistent list.
+     */
+    save: function(service) {
         var services = [];
-        for (var i=0; i<options.length; i++) {
-            var service = options[i].getValue();
-            if (service != "") {
-                services.push(service);
-            }
+        if(this.servicesPreference.get() != "")
+            services = JSON.parse(this.servicesPreference.get());
+        
+        var found = false;
+        for(var i = 0; i < services.length; i++){
+            if(services[i].url == service.url)
+                found = true;
         }
-        this.servicesPreference.set(Object.toJSON(services));
+        
+        if(!found){
+            services.push(service);
+            this.servicesPreference.set(JSON.stringify(services));
+        }
     },
 
-    sendLocation: function(lon, lat) {
-        this.locationEvent.send(lon + "," + lat);
-    },
-
+    /*
+     * This function sends and event with the location info
+     */
     sendLocationInfo: function(lon, lat, title) {
-        this.locationInfoEvent.send(Object.toJSON({
-            "position": {
-                "lon": lon,
-                "lat": lat
-            },
-            "title": title
-        }));
+        this.locationInfoEvent.send(JSON.stringify([{
+            lon: lon,
+            lat: lat,
+            coordinates: lon + "," + lat,
+            title: title
+        }]));
     },
 
     sendText: function(text) {
@@ -146,224 +323,7 @@ conwet.Gadget = Class.create({
         this.searchTextEvent.send(text);
     },
 
-    _sendSearchRequest: function (service, word) {
-        this.clearUI();
-
-        var baseURL = service.url;
-
-        if ((baseURL == "") || (word == "")) {
-            this.showMessage(_("Faltan datos en el formulario."));
-            return;
-        }
-
-        if (baseURL.indexOf('?') == -1) {
-            baseURL = baseURL + '?';
-        } else {
-            if (baseURL.charAt(baseURL.length - 1) == '&') {
-                baseURL = baseURL.slice(0, -1);
-            }
-        }
-
-        var lowerIndex = 0;
-        var upperIndex = 20;
-
-        var url = "http://idezar.zaragoza.es/IDEE-MapViewerGazetteer/SearchControllerJSONServlet?" +
-        "operation=queryServer" +
-        "&sourceRDF=" +
-        "&callbackName=" +
-        "&numResultsComponentsValues=0" +
-        "&lowerIndex=" + lowerIndex +
-        "&upperIndex=" + upperIndex +
-        "&initiallySelectedSource=false";
-
-        if (service.service_type.toUpperCase() != "MNE") {
-            url += 
-            "&sourceName=" + this._encodeASCII(baseURL) +
-            "&sourceTitle=" +
-            "&useSourceRDF=false" +
-            "&useRDFMetadata=true" +
-            "&createRDF=true" +
-            "&sourceServiceType=" + service.service_type +
-            "&sourceServiceURL=" + baseURL +
-            "&query=" + this._encodeASCII(
-                "<Filter>" +
-                    "<PropertyIsLike>" +
-                        "<PropertyName>mne:Entidad/mne:nombreEntidad/mne:NombreEntidad/mne:nombre</PropertyName>" +
-                        "<Literal>" + word + "</Literal>" +
-                    "</PropertyIsLike>" +
-                "</Filter>"
-            );
-        }
-        else {
-            url += 
-            "&sourceName=sourceAccessWFS-EGN-NGC.rdf" +
-            "&sourceTitle=" +
-            "&useSourceRDF=true" +
-            "&useRDFMetadata=false" +
-            "&createRDF=false" +
-            "&sourceServiceType=" +
-            "&sourceServiceURL=" +
-            "&query=" + this._encodeASCII(
-                "<Filter>" +
-                    "<PropertyIsLike>" +
-                        "<PropertyName>mne:Entidad/mne:nombreEntidad/mne:NombreEntidad/mne:nombre</PropertyName>" +
-                        "<Literal>" + word + "</Literal>" +
-                    "</PropertyIsLike>" +
-                "</Filter>"
-            );
-        }
-
-       //&sourceTitle=Nomenclux00E1torux0020EuroGeonames
-
-        this.showMessage(_("Solicitando datos al servidor."), true);
-        //TODO Gif chulo para esperar
-        EzWebAPI.send_get(
-            url,
-            this,
-            function(transport) {
-                this.hideMessage();
-                this._drawEntities(eval(transport.responseText), lowerIndex , upperIndex);
-            }.bind(this),
-            function(){
-                this.showError(_("El servidor no responde."));
-            }
-        );
-    },
-
-    _encodeASCII: function(word) {
-        var aux = "";
-        for (var i=0; i<word.length; i++) {
-            var code = word.charCodeAt(i);
-            if (((code >= 65) && (code <= 90)) || ((code >= 48) && (code <= 57)) || ((code >= 97) && (code <= 122))) {
-                aux += word.substr(i, 1);
-            }
-            else {
-                aux += ("ux00" + word.charCodeAt(i).toString(16).toUpperCase());
-            }
-        }
-        return aux;
-    },
-
-    _decodeASCII: function(word) {
-        var aux = "";
-        var i = 0;
-        while (i <= word.length-5) {
-            if (word.substr(i, 4).toLowerCase() == "ux00") {
-                if (i+5 < word.length) {
-                    var code = word.charCodeAt(i+5);
-                    if (((code >= 65) && (code <= 70)) || ((code >= 48) && (code <= 57)) || ((code >= 97) && (code <= 102))) {
-                        aux += String.fromCharCode(parseInt(word.substr(i+4, 2), 16));
-                        i += 6;
-                        continue;
-                    }
-                }
-                aux += String.fromCharCode(parseInt(word.substr(i+4, 1), 16));
-                i += 5;
-            }
-            else {
-                aux += word.substr(i, 1);
-                i++;
-            }
-        }
-        return aux + word.substr(i, word.length-i);
-    },
-
-    _drawEntities: function(json, lowerIndex , upperIndex) {
-        this.clearUI();
-
-        var nEntities = json[1].totalLength;
-        var entities = json[2];
-
-        for (var i=0; i<entities.length; i++) {
-            var entity = entities[i];
-
-            var div = document.createElement("div");
-            $(div).addClassName("feature");
-
-            var context = {
-                "div"   : div,
-                "entity": entity,
-                "url"   : this._decodeASCII(json[1].sourceServiceURL),
-                "type"  : json[1].sourceServiceType,
-                "self"  : this
-            };
-
-            div.title = _("Send event");
-            div.observe("click", function(e) {
-                this.self.sendText(this.self._decodeASCII(this.entity[1][0].text));
-                this.self._sendGetEntityRequest(this.url, this.entity, this.type);
-                //this.self._selectFeature(this.feature, this.div);
-            }.bind(context));
-            div.observe("mouseover", function(e) {
-                this.div.addClassName("highlight");
-            }.bind(context), false);
-            div.observe("mouseout", function(e) {
-                this.div.removeClassName("highlight");
-            }.bind(context), false);
-
-            var title = document.createElement("span");
-            $(title).addClassName("title");
-            title.innerHTML = this._decodeASCII(entity[1][0].text);
-            div.appendChild(title);
-
-            var type = document.createElement("span");
-            $(type).addClassName("type");
-            type.innerHTML = " (" +this._decodeASCII(entity[1][1].text) + ")";
-            div.appendChild(type);
-
-            $("list").appendChild(div);
-        }
-    },
-
-    _sendGetEntityRequest: function (baseURL, entity, type) {
-        this._clearDetails();
-
-        if (baseURL.indexOf('?') == -1) {
-            baseURL = baseURL + '?';
-        } else {
-            if (baseURL.charAt(baseURL.length - 1) == '&') baseURL = baseURL.slice(0, -1);
-        }
-
-        baseURL = "http://idezar.zaragoza.es/IDEE-MapViewerGazetteer/SearchControllerJSONServlet?" +
-        "operation=getCompleteServer" +
-        "&callbackName=" +
-        "&locale=es" +
-        "&language=es" +
-        "&sourceServiceType=" + type +
-        "&sourceServiceURL=" + baseURL +
-        "&sourceRDF=" +
-        "&sourceTitle=" +
-        "&useSourceRDF=false" +
-        "&useRDFMetadata=true" +
-        "&createRDF=true" +
-        "&initiallySelectedSource=false" +
-        "&sourceName=" + this._encodeASCII(baseURL) +
-        "&fileID=" + entity[0].fileIdentifier +
-        "&viewDetails=true" +
-        "&numResultsComponentsValues=0" +
-        "&query=" + this._encodeASCII(
-            "<Filter>" +
-                "<PropertyIsLike>" +
-                    "<PropertyName>mne:Entidad/mne:nombreEntidad/mne:NombreEntidad/mne:nombre</PropertyName>" +
-                    "<Literal>" + entity[1][0].text + "</Literal>" +
-                "</PropertyIsLike>" +
-            "</Filter>"
-        );
-
-        this.showMessage(_("Solicitando datos al servidor."), true);
-        //TODO Gif chulo para esperar
-        EzWebAPI.send_get(
-            baseURL,
-            this,
-            function(transport) {
-                this.hideMessage();
-                this._showDetails(eval(transport.responseText), entity);
-            }.bind(this),
-            function(){
-                this.showError(_("El servidor no responde."));
-            }
-        );
-    },
+    
 
     _selectFeature: function(feature, element) {
         this._deselectAllFeatures();
@@ -375,43 +335,6 @@ conwet.Gadget = Class.create({
         var features = $("chan_items").childNodes;
         for (var i=0; i<features.length; i++) {
             features[i].removeClassName("selected");
-        }
-    },
-
-    _showDetails: function(json, entity) {
-        $("info").innerHTML = this._decodeASCII(json[1].metadataHTML);
-
-        var srs      = this._decodeASCII(entity[1][4].text);
-        var location = this._decodeASCII(entity[1][3].text).split(/,*\s+/);
-        if (!location || (location == "")) {
-            var sections = $("info").getElementsByClassName("section5v");
-            if (sections.length > 0) {
-                location = $("info").getElementsByClassName("section5v")[0].innerHTML.split(/,*\s+/);
-            }
-        }
-
-        location = new OpenLayers.LonLat(location[0], location[1]);
-        if (srs && (srs != "")) {
-            location = this.transformer.advancedTransform(location, srs, this.transformer.DEFAULT.projCode);
-        }
-
-        this.sendLocation(location.lon, location.lat);
-        this.sendLocationInfo(location.lon, location.lat, this._decodeASCII(entity[1][0].text));
-
-        var sections = $("info").getElementsByClassName("section3v");
-        for (var i=0; i<sections.length; i++) {
-            $(sections[i]).observe("click", function(e) {
-                e.target.title = _("Send event");
-                this.sendText(e.target.innerHTML);
-            }.bind(this));
-        }
-
-        sections = $("info").getElementsByClassName("section5v");
-        for (var i=0; i<sections.length; i++) {
-            $(sections[i]).observe("click", function(e) {
-                e.target.title = _("Send event");
-                this.sendText(e.target.innerHTML);
-            }.bind(this));
         }
     },
 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<serviceConfig
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='./js/conwet/service-config/service_config.xsd'>
+    <request>
+        <url>http://www.cartociudad.es/wfs-inspire/direcciones</url>
+        <version>2.0.0</version>
+        <typename>ad:Address</typename>
+        <extraParam name="storedquery_id">urn:x-inspire:StoredQueries:AddressByThoroughfareNameAndAdminUnitName</extraParam>
+        <extraParam name="nameOfTheAdminUnitName">{{adminUnit}}</extraParam>
+        <extraParam name="nameOfTheThoroughfareName">{{thoroughfareName}}</extraParam>
+        <search>
+            <option id="adminUnit" label="Unidad administrativa">-</option>
+            <option id="thoroughfareName" label="Nombre de vía">-</option>
+        </search>
+    </request>
+    <results>
+        <locationInfo>locator/AddressLocator/designator/LocatorDesignator/designator</locationInfo>
+        <location>position/GeographicPosition/geometry/Point/pos</location>
+        <srs attribute="srsName">position/GeographicPosition/geometry/Point</srs>
+        <outputText>locator/AddressLocator/designator/LocatorDesignator/designator</outputText>
+        <displayInfo headChar="Nº" >locator/AddressLocator/designator/LocatorDesignator/designator</displayInfo>
+    </results>
+    <details>
+        <detailslevel>
+            <label>Número</label>
+            <path>locator/AddressLocator/designator/LocatorDesignator/designator</path>
+        </detailslevel>
+        <detailslevel>
+            <label>Coordenadas</label>
+            <path>position/GeographicPosition/geometry/Point/pos</path>
+        </detailslevel>
+        <detailslevel>
+            <label>SRS</label>
+            <path attribute="srsName">position/GeographicPosition/geometry/Point</path>
+        </detailslevel>
+    </details>
+</serviceConfig>

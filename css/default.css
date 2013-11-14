@@ -1,98 +1,80 @@
 body {
-    margin:0px;
-    padding:0px;
-    font-size: smaller;
-    width: 100%;
-    font-family: sans-serif;
-    overflow:auto;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
     background-color: #D1E0F7;
+    bottom: 0;
     color: #444444;
-    overflow: hidden;
+    font-family: sans-serif;
+    font-size: smaller;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    right: 0;
+    top: 0;
+    width: 100%;
+    overflow: auto;
 }
-
 .no_display {
     display: none !important;
 }
-
 #header {
-    height: 75px;
-    left: 5px;
-    position: absolute;
-    right: 5px;
-    top: 5px;
+    margin-left: 5px;
+    margin-top: 3px;
+    position: relative;
 }
-
 #header .label {
-    color: #444444;
-    font-size: 13px;
     background-color: #D1E0F7;
+    color: #444444;
+    display: block;
+    font-size: 13px;
     font-weight: bold;
 }
-
-#header .select_container  {
-    margin: 0 0 5px 0;
+#header .select_container {
+    margin: 0 0 5px;
 }
-
 #header div.search {
-    -moz-border-radius: 3px 3px 3px 3px;
-    background: white;
+    background: none repeat scroll 0 0 white;
     border: 1px solid #809DCD;
-    display: block;
-    height: 18px;
-    position: absolute;
-    left: 0;
-    right: 80px;
+    display: inline;
     overflow: hidden;
+    position: relative;
+    width: 100%;
 }
-
 #header input.search {
-    -moz-border-radius: 3px 3px 3px 3px;
-    background: white;
-    border: none;
+    background: none repeat scroll 0 0 white;
+    border: medium none;
     color: #444444;
-    display: block;
+    display: inline;
     font-size: small;
-    height: 100%;
-    width: 98%;
     margin: 0 1%;
-    position: absolute;
     padding: 0;
+    position: relative;
+    width: 85%;
 }
-
 #header .search_button {
-    -moz-border-radius: 3px 3px 3px 3px;
     background: url("../img/button.png") repeat-x scroll 0 0 #EEEEEE;
     border: 1px solid #809DCD;
     color: #444444;
     cursor: pointer;
-    float: right;
+    display: inline;
     font-family: sans-serif;
     font-size: small;
     height: 18px;
-    width: 60px;
-    text-align: center;
     line-height: 18px;
     padding: 0 5px;
+    text-align: center;
 }
-
 #list {
-    border-radius: 3px 8px 3px 3px;
-    -moz-border-radius: 3px 8px 3px 3px;
-    -webkit-border-radius: 3px 8px 3px 3px;
-    background-color: white;
+    background-color: #FFFFFF;
     border: 1px solid #809DCD;
+    border-radius: 3px 3px 3px 3px;
+    display: block;
     height: 110px;
-    left: 5px;
-    position: absolute;
-    right: 5px;
-    top: 85px;
+    margin-left: 5px;
+    margin-right: 3px;
+    margin-top: 5px;
     overflow: auto;
+    padding: 3px;
+    position: relative;
 }
-
 #list .feature {
     border-bottom: 1px solid transparent;
     border-top: 1px solid transparent;
@@ -100,66 +82,100 @@ body {
     display: block;
     height: 20px;
     margin: 1px 0;
+    overflow: hidden;
     position: relative;
     width: 100%;
-    overflow: hidden;
 }
-
 #list .selected {
+    background: none repeat scroll 0 0 #D1E0F7;
     border-bottom: 1px dashed #809DCD;
     border-top: 1px dashed #809DCD;
-    background: #D1E0F7;
 }
-
 #list .highlight {
-    background: #B6DAFB;
+    background: none repeat scroll 0 0 #B6DAFB;
 }
-
 #info {
-    border-radius: 3px 3px 3px 8px;
-    -moz-border-radius: 3px 3px 3px 8px;
-    -webkit-border-radius: 3px 3px 3px 8px;
-    background-color: white;
+    background-color: #FFFFFF;
     border: 1px solid #809DCD;
-    bottom: 5px;
-    left: 5px;
+    border-radius: 3px 3px 3px 8px;
+    display: block;
+    margin: 5px 3px 3px;
     overflow: auto;
-    padding: 0;
-    position: absolute;
-    right: 5px;
-    top: 202px;
+    position: relative;
     width: auto;
 }
-
 #info .info_head {
-    border-radius: 2px 2px 0 0;
-    -moz-border-radius: 2px 2px 0 0;
-    -webkit-border-radius: 2px 2px 0 0;
     background: url("../img/layer-header.png") repeat-x scroll 0 0 transparent;
+    border-radius: 2px 2px 0 0;
     display: block;
     height: 18px;
     left: 0;
+    overflow: hidden;
     padding: 0 5px;
     position: absolute;
     right: 0;
     top: 0;
-    overflow: hidden;
 }
-
 #info .info_title {
     float: left;
 }
-
 #info .info_location {
     float: right;
 }
-
 #info .info_description {
     bottom: 0;
     left: 0;
     overflow: auto;
+    padding: 5px;
     position: absolute;
     right: 0;
     top: 18px;
-    padding: 5px;
+}
+
+.featurecontainer {
+    display: block;
+    height: 110px;
+    overflow: auto;
+    position: relative;
+}
+.featurecontainer div {
+    margin-left: 4px;
+}
+.featurecontainer > .featureHead {
+    background-color: #BBBBBB;
+    font-weight: bold;
+    margin-top: 4px;
+}
+.fieldContainer {
+    background-color: #E3E3E3;
+    display: block;
+}
+.fieldName {
+    display: inline;
+}
+.fieldValue {
+    color: #6A6A6A;
+    display: inline;
+}
+.fieldName:after {
+    content: ":";
+}
+.fieldName:before {
+    content: "· ";
+}
+.featureHead {
+    background-color: #C3C3C3;
+}
+.featureFieldsContainer {
+    margin-left: 4px;
+}
+.featureContainer > .featureHead {
+    margin-top: 7px;
+}
+.featureContainer > .featureHead:nth-child(1) {
+    margin-top: 0px;
+}
+.hidden {
+   display: none;
+   visibility: hidden;
 }
