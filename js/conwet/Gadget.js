@@ -68,14 +68,6 @@ conwet.Gadget = Class.create({
             }
         }.bind(this));
         
-        this.wfsServiceSlot   = new conwet.events.Slot('wfs_service_slot', function(service) {
-            service = JSON.parse(service);
-
-            if ((typeof service == 'object') && ('type' in service) && ('url' in service) && ('service_type' in service) && ('name' in service) && (service.type == "WFS") && (service.url != "")) {
-                this.loadNewService(service, true);
-            }
-        }.bind(this));
-        
         this.configSlot   = new conwet.events.Slot('config_slot', function(service) {
             service = JSON.parse(service);
             if ((typeof service == 'object') && ('type' in service) && ('url' in service) && ('service_type' in service) && ('name' in service) && (service.type == "WFS") && (service.url != "")) {
@@ -207,25 +199,9 @@ conwet.Gadget = Class.create({
         
         //Add it if it already isn't in the select
         if(!(serviceJson in this.serviceSelect.optionValues)){
-            
             if(service.xmlText != null){
                 var configuration = XMLObjectifier.xmlToJSON(XMLObjectifier.textToXML(service.xmlText));
                 this.addNewService(service, configuration, selected);
-            }else{
-                //Load the configuration of the service
-                new Ajax.Request(servicesAssociations[service.url], {
-                    method: 'GET',
-                    onSuccess: function(transport) {
-
-                        var configuration = XMLObjectifier.xmlToJSON(transport.responseXML);
-
-                        this.addNewService(service, configuration, selected);
-
-                    }.bind(this),
-                    onFailure: function(transport) {
-                        this.showMessage(_("Error al cargar la configuración del servicio"));
-                    }.bind(this)
-                });
             }
         }
         

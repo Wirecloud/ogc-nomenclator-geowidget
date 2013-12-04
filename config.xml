@@ -4,7 +4,7 @@
         <Vendor>CoNWeT</Vendor>
         <Name>ogc-nomenclator-geowidget</Name>
         <DisplayName>Nomenclator</DisplayName>
-        <Version>0.3</Version>
+        <Version>0.5</Version>
         <Author>jmostazo</Author>
         <Mail>jmostazo@fi.upm.es</Mail>
         <Description>This widget allows users to make place names searches by means of a nomenclator service list. It supports MNE and EGN-based nomenclator services.</Description>
@@ -22,8 +22,7 @@
         <OutputEndpoint name="output_text_event"   type="text" label="Output Text"   friendcode="keyword"/>
         <OutputEndpoint name="search_text_event"   type="text" label="Search Text"   friendcode="keywords"/>
         <InputEndpoint  name="search_text_slot"    type="text" label="Search Text"   friendcode="keyword"/>
-        <InputEndpoint  name="wfs_service_slot"    type="text" label="WFS info"      friendcode="service_info"/>
-        <InputEndpoint  name="config_slot"    type="text" label="Config"   friendcode="config"/>
+        <InputEndpoint  name="config_slot"         type="text" label="Config"        friendcode="nomen_config"/>
     </Platform.Wiring>
 
     <Platform.Link>
