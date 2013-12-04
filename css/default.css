@@ -179,3 +179,9 @@ body {
    display: none;
    visibility: hidden;
 }
+.attribute {
+    background-color: #E2E2E2;
+}
+.featureAttributesContainer {
+    margin-left: 4px;
+}

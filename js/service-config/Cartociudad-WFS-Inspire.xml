@@ -22,7 +22,7 @@
         <outputText>locator/AddressLocator/designator/LocatorDesignator/designator</outputText>
         <displayInfo headChar="Nº" >locator/AddressLocator/designator/LocatorDesignator/designator</displayInfo>
     </results>
-    <details>
+    <details auto="true">
         <detailslevel>
             <label>Número</label>
             <path>locator/AddressLocator/designator/LocatorDesignator/designator</path>
