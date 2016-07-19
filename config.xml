@@ -1,35 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Template xmlns="http://morfeo-project.org/2007/Template">
-    <Catalog.ResourceDescription>
-        <Vendor>CoNWeT</Vendor>
-        <Name>ogc-nomenclator-geowidget</Name>
-        <DisplayName>Nomenclator</DisplayName>
-        <Version>0.1</Version>
-        <Author>jmostazo</Author>
-        <Mail>jmostazo@fi.upm.es</Mail>
-        <Description>This widget allows users to make place names searches by means of a nomenclator service list. It supports MNE and EGN-based nomenclator services.</Description>
-        <ImageURI>img/nomenclator.png</ImageURI>
-        <iPhoneImageURI>img/nomenclator.png</iPhoneImageURI>
-        <WikiURI>http://hercules.ls.fi.upm.es/public/conwet/ogf.html#getfeature-widget</WikiURI>
-    </Catalog.ResourceDescription>
-
-    <Platform.StateProperties>
-        <Property name="services" type="text" label="Services"/>
-    </Platform.StateProperties>
-
-    <Platform.Wiring>
-        <Event name="location_info_event" type="text" label="Location info" friendcode="location_info"/>
-        <Event name="location_event"      type="text" label="Location"      friendcode="location"/>
-        <Event name="output_text_event"   type="text" label="Output Text"   friendcode="keyword"/>
-        <Event name="search_text_event"   type="text" label="Search Text"   friendcode="keyword"/>
-        <Slot  name="search_text_slot"    type="text" label="Search Text"   friendcode="keyword"/>
-        <Slot  name="wfs_service_slot"    type="text" label="WFS info"      friendcode="service_info"/>
-    </Platform.Wiring>
-
-    <Platform.Link>
-        <XHTML href="index.html"/>
-    </Platform.Link>
-
-    <Platform.Rendering width="6" height="28"/>
-
-</Template>
+<?xml version='1.0' encoding='UTF-8'?>
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="CoNWeT" name="ogc-nomenclator-geowidget" version="0.1">
+  <details>
+    <title>Nomenclator</title>
+    <email>jmostazo@fi.upm.es</email>
+    <image>img/nomenclator.png</image>
+    <smartphoneimage>img/nomenclator.png</smartphoneimage>
+    <description>This widget allows users to make place names searches by means of a nomenclator service list. It supports MNE and EGN-based nomenclator services.</description>
+    <doc>http://hercules.ls.fi.upm.es/public/conwet/ogf.html#getfeature-widget</doc>
+    <authors>jmostazo</authors>
+  </details>
+  <persistentvariables>
+    <variable name="services" type="text" label="Services"/>
+  </persistentvariables>
+  <wiring>
+    <outputendpoint name="location_info_event" type="text" label="Location info" friendcode="location_info"/>
+    <outputendpoint name="location_event" type="text" label="Location" friendcode="location"/>
+    <outputendpoint name="output_text_event" type="text" label="Output Text" friendcode="keyword"/>
+    <outputendpoint name="search_text_event" type="text" label="Search Text" friendcode="keyword"/>
+    <inputendpoint name="search_text_slot" type="text" label="Search Text" friendcode="keyword"/>
+    <inputendpoint name="wfs_service_slot" type="text" label="WFS info" friendcode="service_info"/>
+  </wiring>
+  <contents src="index.html"/>
+  <rendering height="28" width="6"/>
+</widget>
